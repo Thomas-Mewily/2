@@ -1,7 +1,7 @@
 # I_know
 
 This code is under the Public domain : available, usable, editable, sharable for everyone. 
-I't great. It know. - Mewily
+I't great. I know. - Mewily
 
 ```cpp
 1 : true.
