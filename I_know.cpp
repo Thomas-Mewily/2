@@ -205,18 +205,14 @@ public:
             {
                 return false;
             }
-            /*
-            if constexpr (level == 2)
+            if((*this == b<level>::dont_care()))
             {
-                if((this == b<level>::dont_care()))
-                {
-                    return a;
-                }
-                if((a == b<level>::dont_care()))
-                {
-                    return this;
-                }
-            } */
+                return a;
+            }
+            if((a == b<level>::dont_care()))
+            {
+                return *this;
+            }
             return b<level>(cond & a.cond, false);
         }
     }
@@ -372,7 +368,6 @@ void print_operator()
 
 int main()
 {
-
     /*
     cout << b<0> () << endl << endl;
 
@@ -393,10 +388,10 @@ int main()
     cout << b<3> (b<2> (false, true ), false) << endl;
     */
 
-     print_all_possibilities<0,1>(cout, b<0>());
-     print_all_possibilities<0,2>(cout, b<0>());
-     print_all_possibilities<0,3>(cout, b<0>());
-     print_all_possibilities<0,4>(cout, b<0>());
+    // print_all_possibilities<0,1>(cout, b<0>());
+    // print_all_possibilities<0,2>(cout, b<0>());
+    // print_all_possibilities<0,3>(cout, b<0>());
+    // print_all_possibilities<0,4>(cout, b<0>());
     // print_all_possibilities<0,5>(cout, b<0>());
     // print_all_possibilities<0,6>(cout, b<0>());
 
@@ -405,8 +400,8 @@ int main()
     //cout << (b<1>(true) & b<1>(true)) << endl;
 
     //print_operator<0>();
-    //print_operator<1>();
-    //print_operator<2>();
+    print_operator<1>();
+    print_operator<2>();
     //pruint_operator<3>();
 
     return 0;
