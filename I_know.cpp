@@ -6,7 +6,7 @@ using namespace std;
 
 // Made by Mewily. An attempt to make a kind of logic using multiple booleans
 /*
-gcc -fdiagnostics-color=always -g ./*.c* -o I_know.exe -Wall -Wextra -std=c++17
+g++ -fdiagnostics-color=always -g ./*.c* -o I_know.exe -Wall -Wextra -std=c++17
 */
 // Thank to https://gist.github.com/toch/7ed3a1786d0ed464fd94 for the fibonacci example
 
@@ -275,12 +275,12 @@ public:
 };
 
 template <uint X, uint Z>
-ostream &pruint_all_possibilities_tmp(ostream &os, b<X> cur)
+ostream &print_all_possibilities_tmp(ostream &os, b<X> cur)
 {
     if constexpr (X < Z)
     {
-        pruint_all_possibilities_tmp<X + 1, Z>(os, b<X + 1>(cur, true));
-        pruint_all_possibilities_tmp<X + 1, Z>(os, b<X + 1>(cur, false));
+        print_all_possibilities_tmp<X + 1, Z>(os, b<X + 1>(cur, true));
+        print_all_possibilities_tmp<X + 1, Z>(os, b<X + 1>(cur, false));
     }
     else
     {
@@ -290,9 +290,9 @@ ostream &pruint_all_possibilities_tmp(ostream &os, b<X> cur)
 }
 
 template <uint X = 0, uint Z>
-ostream &pruint_all_possibilities(ostream &os, b<X> cur)
+ostream& print_all_possibilities(ostream &os, b<X> cur)
 {
-    pruint_all_possibilities_tmp<X, Z>(os, cur);
+    print_all_possibilities_tmp<X, Z>(os, cur);
     os << endl;
     return os;
 }
@@ -393,10 +393,10 @@ int main()
     cout << b<3> (b<2> (false, true ), false) << endl;
     */
 
-    // print_all_possibilities<0,1>(cout, b<0>());
-    // print_all_possibilities<0,2>(cout, b<0>());
-    // print_all_possibilities<0,3>(cout, b<0>());
-    // print_all_possibilities<0,4>(cout, b<0>());
+     print_all_possibilities<0,1>(cout, b<0>());
+     print_all_possibilities<0,2>(cout, b<0>());
+     print_all_possibilities<0,3>(cout, b<0>());
+     print_all_possibilities<0,4>(cout, b<0>());
     // print_all_possibilities<0,5>(cout, b<0>());
     // print_all_possibilities<0,6>(cout, b<0>());
 
@@ -405,8 +405,8 @@ int main()
     //cout << (b<1>(true) & b<1>(true)) << endl;
 
     //print_operator<0>();
-    print_operator<1>();
-    print_operator<2>();
+    //print_operator<1>();
+    //print_operator<2>();
     //pruint_operator<3>();
 
     return 0;
