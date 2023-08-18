@@ -300,9 +300,9 @@ public:
         return os;
     }
 
-    b<0> operator|(b<0> b) { unused(b); return this; }
-    b<0> operator&(b<0> b) { unused(b); return this; }
-    b<0> operator!() { return this; }
+    b<0> operator|(b<0> a) { unused(a); return b<0>(); }
+    b<0> operator&(b<0> a) { unused(a); return b<0>(); }
+    b<0> operator!() { return b<0>(); }
 };
 
 //'if constexpr' only available with '-std=c++17' or '-std=gnu++17'
@@ -437,7 +437,7 @@ int main()
 
     //cout << (b<1>(true) & b<1>(true)) << endl;
 
-    print_operator<0>();
+    //print_operator<0>();
     print_operator<1>();
     print_operator<2>();
     print_operator<3>();
