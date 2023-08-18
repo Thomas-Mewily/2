@@ -6,47 +6,14 @@ using namespace std;
 
 // Made by Mewily. An attempt to make a kind of logic using multiple booleans
 /*
-
-1 : true.
-0 : false.
-
-11 : this is true
-10 : I don't care
-01 : this is false
-00 : I don't know
-
-111 : I   know,   that this is true
-110 : I ignore,   that this is true
-101 : I   know,   that I don't care
-100 : I ignore,   that I don't care
-011 : I   know,   that this is false
-010 : I ignore,   that this is false
-001 : I   know,   that I don't know
-000 : I ignore,   that I don't know
-
-1111 : I   know,   that I   know,   that this is true
-1110 : I ignore,   that I   know,   that this is true
-1101 : I   know,   that I ignore,   that this is true
-1100 : I ignore,   that I ignore,   that this is true
-1011 : I   know,   that I   know,   that I don't care
-1010 : I ignore,   that I   know,   that I don't care
-1001 : I   know,   that I ignore,   that I don't care
-1000 : I ignore,   that I ignore,   that I don't care
-0111 : I   know,   that I   know,   that this is false
-0110 : I ignore,   that I   know,   that this is false
-0101 : I   know,   that I ignore,   that this is false
-0100 : I ignore,   that I ignore,   that this is false
-0011 : I   know,   that I   know,   that I don't know
-0010 : I ignore,   that I   know,   that I don't know
-0001 : I   know,   that I ignore,   that I don't know
-0000 : I ignore,   that I ignore,   that I don't know
-
+gcc -fdiagnostics-color=always -g ./*.c* -o I_know.exe -Wall -Wextra -std=c++17
 */
 // Thank to https://gist.github.com/toch/7ed3a1786d0ed464fd94 for the fibonacci example
 
 #define unused(x) (void)(x)
+typedef unsigned int uint;
 
-template <int level>
+template <uint level>
 class b
 {
 public:
@@ -123,14 +90,14 @@ public:
         return !(this == b);
     }
 
-    ostream &print_bool(ostream &os)
+    ostream &pruint_bool(ostream &os)
     {
-        cond.print_bool(os);
+        cond.pruint_bool(os);
         os << know;
         return os;
     }
 
-    ostream &print_string(ostream &os, bool is_value = true)
+    ostream &pruint_string(ostream &os, bool is_value = true)
     {
         if constexpr (level == 1)
         {
@@ -173,37 +140,22 @@ public:
         {
             if (know)
             {
-                //os << COLOR_FOREGROUND_GREEN << "I   know, " << COLOR_RESET << "  that ";
-                if (cond.know)
-                {
-                    os << COLOR_FOREGROUND_GREEN << "I  know, " << COLOR_RESET << "that ";
-                }
-                else
-                {
-                    os << COLOR_FOREGROUND_RED << "I  know," << COLOR_RESET << "!that ";
-                }
+                os << COLOR_FOREGROUND_GREEN << "I   know, " << COLOR_RESET << "that ";
             }
             else
             {
-                if (care.know)
-                {
-                    os << COLOR_FOREGROUND_MAGENTA "I !know, " << COLOR_RESET << "that ";
-                }
-                else
-                {
-                    os << COLOR_FOREGROUND_YELLOW  "I !care, " << COLOR_RESET << "that ";
-                }
+                os << COLOR_FOREGROUND_RED << "I ignore, " << COLOR_RESET << "that ";
             }
-            cond.print_string(os, is_value & know);
+            cond.pruint_string(os, is_value & know);
         }
         return os;
     }
 
     friend ostream &operator<<(ostream &os, b<level> b)
     {
-        b.print_bool(os);
+        b.pruint_bool(os);
         os << " : ";
-        b.print_string(os);
+        b.pruint_string(os);
         return os;
     }
 
@@ -222,7 +174,20 @@ public:
             {
                 return false;
             }
-            return b<level>::unknow();
+            /*
+            if constexpr (level == 2)
+            {
+
+            } */
+            if((*this == b<level>::dont_care()))
+            {
+                return a;
+            }
+            if((a == b<level>::dont_care()))
+            {
+                return *this;
+            }
+            return b<level>(cond | a.cond, false);
         }
     }
     b<level> operator&(b<level> a)
@@ -240,7 +205,19 @@ public:
             {
                 return false;
             }
-            return b<level>::unknow();
+            /*
+            if constexpr (level == 2)
+            {
+                if((this == b<level>::dont_care()))
+                {
+                    return a;
+                }
+                if((a == b<level>::dont_care()))
+                {
+                    return this;
+                }
+            } */
+            return b<level>(cond & a.cond, false);
         }
     }
 
@@ -254,14 +231,6 @@ public:
             return b<level>(!cond, know);
         }
     }
-    /*
-    struct b<level> operator& (b<level> b)
-    {
-      return value &  b.value;
-    }
-
-    struct b<level> operator| (struct b<level> b) { return value |  b.value; }
-    bool operator^ (struct b<level> b) { return value ^  b.value; }*/
 };
 
 template <>
@@ -290,11 +259,11 @@ public:
         unused(b);
         return os;
     }
-    ostream &print_bool(ostream &os)
+    ostream &pruint_bool(ostream &os)
     {
         return os;
     }
-    ostream &print_string(ostream &os, bool is_value = true)
+    ostream &pruint_string(ostream &os, bool is_value = true)
     {
         unused(is_value);
         return os;
@@ -305,15 +274,13 @@ public:
     b<0> operator!() { return b<0>(); }
 };
 
-//'if constexpr' only available with '-std=c++17' or '-std=gnu++17'
-
-template <int X, int Z>
-ostream &print_all_possibilities_tmp(ostream &os, b<X> cur)
+template <uint X, uint Z>
+ostream &pruint_all_possibilities_tmp(ostream &os, b<X> cur)
 {
     if constexpr (X < Z)
     {
-        print_all_possibilities_tmp<X + 1, Z>(os, b<X + 1>(cur, true));
-        print_all_possibilities_tmp<X + 1, Z>(os, b<X + 1>(cur, false));
+        pruint_all_possibilities_tmp<X + 1, Z>(os, b<X + 1>(cur, true));
+        pruint_all_possibilities_tmp<X + 1, Z>(os, b<X + 1>(cur, false));
     }
     else
     {
@@ -322,15 +289,15 @@ ostream &print_all_possibilities_tmp(ostream &os, b<X> cur)
     return os;
 }
 
-template <int X = 0, int Z>
-ostream &print_all_possibilities(ostream &os, b<X> cur)
+template <uint X = 0, uint Z>
+ostream &pruint_all_possibilities(ostream &os, b<X> cur)
 {
-    print_all_possibilities_tmp<X, Z>(os, cur);
+    pruint_all_possibilities_tmp<X, Z>(os, cur);
     os << endl;
     return os;
 }
 
-template <int X, int Z>
+template <uint X, uint Z>
 void get_all_possibilities(vector<b<Z>>& vals, b<X> cur)
 {
     if constexpr (X < Z)
@@ -345,7 +312,7 @@ void get_all_possibilities(vector<b<Z>>& vals, b<X> cur)
     //return vals;
 }
 
-template<int X>
+template<uint X>
 void print_operator()
 {
     vector<b<X> > v = vector<b<X> >();
@@ -393,10 +360,10 @@ void print_operator()
         {
             cout << "(a)=(" << a << ")" << sep <<
                     "(b)=(" << b << ")" << sep << ":" << sep <<
-                    "((a&b) | (!a) | b)=(" << ((a&b) | (!a) | b) << ") " << endl; /* sep <<
+                    //"((a&b) | (!a) | b)=(" << ((a&b) | (!a) | b) << ") " << sep <<
                     "((a&b) | (!a))=(" << ((a&b) | (!a)) << ") " << sep <<
                     "((a&b) | ((!a)&b) | ((!a)&(!b)))=(" << ((a&b) | ((!a)&b) | ((!a)&(!b))) << ") " << sep <<
-                    "((!a) | b)=(" << ((!a) | b)<< ") " << endl;*/
+                    "((!a) | b)=(" << ((!a) | b)<< ") " << endl;
         }
     }
     cout << endl;
@@ -433,14 +400,14 @@ int main()
     // print_all_possibilities<0,5>(cout, b<0>());
     // print_all_possibilities<0,6>(cout, b<0>());
 
-    //print_all_possibilities
+    //pruint_all_possibilities
 
     //cout << (b<1>(true) & b<1>(true)) << endl;
 
     //print_operator<0>();
     print_operator<1>();
     print_operator<2>();
-    print_operator<3>();
+    //pruint_operator<3>();
 
     return 0;
 }

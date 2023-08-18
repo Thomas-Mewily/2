@@ -1,7 +1,10 @@
 # I_know
 
-This code is under the Public domain : available, usable, editable, sharable for everyone. 
-I't great. I know. - Mewily
+This code is under the Public domain : available, usable, editable, sharable... for everyone. 
+I't great. I know. 
+
+Code by - Mewily : https://github.com/Thomas-Mewily
+Thank to THEWORLD for helping me with this logic : https://github.com/THEWORLD210202
 
 ```cpp
 1 : true.
